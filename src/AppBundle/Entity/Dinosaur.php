@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dinosaur
 {
+    const LARGE = 10;
+    const HUGE = 30;
     /**
      * @ORM\Column(type="integer")
      */
@@ -24,6 +26,11 @@ class Dinosaur
      * @ORM\Column(type="boolean")
      */
     private $isCarnivorous;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Enclosure", inversedBy="dinosaurs")
+     */
+    private $enclosure;
 
     public function __construct(string $genus = 'Unknown', bool $isCarnivorous = false)
     {
@@ -54,5 +61,10 @@ class Dinosaur
     public function getGenus(): string
     {
         return $this->genus;
+    }
+
+    public function IsCarnivorous()
+    {
+        return $this->isCarnivorous;
     }
 }
