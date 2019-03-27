@@ -5,9 +5,18 @@ namespace AppBundle\Factory;
 
 
 use AppBundle\Entity\Dinosaur;
+use AppBundle\Service\DinosaurLengthDeterminator;
 
 class DinosaurFactory
 {
+    private $determinator;
+
+    public function __construct(DinosaurLengthDeterminator $determinator)
+    {
+
+        $this->determinator = $determinator;
+    }
+
     public function growVelociraptor(int $length): Dinosaur
     {
 //        $dinosaur = new Dinosaur('Velociraptor', true);
@@ -23,7 +32,9 @@ class DinosaurFactory
         //defaults
         $codeName = 'InG-' . random_int(1,99999);
 //        $length = random_int(1, Dinosaur::LARGE -1);
-        $length = $this->getLengthFromSpecification($specification);
+//        $length = $this->getLengthFromSpecification($specification);
+        $length = $this->determinator->getLengthFromSpecification($specification);
+//        $length =1;//if by accidently hardcode the length, the test will detect it and fail the test, because mocked method will return 20
         $isCarnivorous = false;
 
 //        if (stripos($specification, 'huge') !== false) {
@@ -58,28 +69,28 @@ class DinosaurFactory
         return $dinosaur;
     }
 
-    private function getLengthFromSpecification(string $specification): int
-    {
-        $availableLengths = [
-            'huge' => ['min' => Dinosaur::HUGE, 'max' => 100],
-            'omg' => ['min' => Dinosaur::HUGE, 'max' => 100],
-            '😱' => ['min' => Dinosaur::HUGE, 'max' => 100],
-            'large' => ['min' => Dinosaur::LARGE, 'max' => Dinosaur::HUGE - 1],
-        ];
-        $minLength = 1;
-        $maxLength = Dinosaur::LARGE - 1;
-
-        foreach (explode(' ', $specification) as $keyword) {
-            $keyword = strtolower($keyword);
-
-            if (array_key_exists($keyword, $availableLengths)) {
-                $minLength = $availableLengths[$keyword]['min'];
-                $maxLength = $availableLengths[$keyword]['max'];
-
-                break;
-            }
-        }
-
-        return random_int($minLength, $maxLength);
-    }
+//    private function getLengthFromSpecification(string $specification): int
+//    {
+//        $availableLengths = [
+//            'huge' => ['min' => Dinosaur::HUGE, 'max' => 100],
+//            'omg' => ['min' => Dinosaur::HUGE, 'max' => 100],
+//            '😱' => ['min' => Dinosaur::HUGE, 'max' => 100],
+//            'large' => ['min' => Dinosaur::LARGE, 'max' => Dinosaur::HUGE - 1],
+//        ];
+//        $minLength = 1;
+//        $maxLength = Dinosaur::LARGE - 1;
+//
+//        foreach (explode(' ', $specification) as $keyword) {
+//            $keyword = strtolower($keyword);
+//
+//            if (array_key_exists($keyword, $availableLengths)) {
+//                $minLength = $availableLengths[$keyword]['min'];
+//                $maxLength = $availableLengths[$keyword]['max'];
+//
+//                break;
+//            }
+//        }
+//
+//        return random_int($minLength, $maxLength);
+//    }
 }

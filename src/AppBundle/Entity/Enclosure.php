@@ -16,15 +16,23 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Enclosure
 {
+
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Dinosaur", mappedBy="enclosure" cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Dinosaur", mappedBy="enclosure", cascade={"persist"})
      */
     private $dinosaurs;
 
     /**
      * @var Collection|Security[]
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Security", mappedBy="enclosure" cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Security", mappedBy="enclosure", cascade={"persist"})
      */
     private $securities;
 
@@ -36,6 +44,11 @@ class Enclosure
         if ($withBasicSecurity){
             $this->addSecurity(new Security('Fence', true, $this));
         }
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getDinosaurs(): Collection
@@ -71,9 +84,19 @@ class Enclosure
         return false;
     }
 
+    public function getSecurities(): Collection
+    {
+        return $this->securities;
+    }
+
     private function canAddDinosaur(Dinosaur $dinosaur): bool
     {
         return count($this->dinosaurs) === 0
             || $this->dinosaurs->first()->isCarnivorous() === $dinosaur->IsCarnivorous();
+    }
+
+    public function getDinosaurCount(): int
+    {
+        return $this->dinosaurs->count();
     }
 }

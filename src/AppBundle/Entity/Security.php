@@ -11,11 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Security
 {
     /**
-     * @ORM\Id
+     * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
+
 
     /**
      * @ORM\Column(type="string")
